@@ -1,0 +1,42 @@
+# Dependencies
+node_modules
+
+# Build outputs
+dist
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test
+coverage
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Cache
+.cache
+
+# Crawlee storage (legacy)
+storage
+
+# Output files
+dataset.jsonl
+output.md
+
+# Lock files (we use pnpm)
+yarn.lock
+package-lock.json

@@ -1,0 +1,86 @@
+{
+  "name": "clipee",
+  "version": "0.1.0",
+  "description": "CLI tool to clip web content and convert to markdown",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "bin": {
+    "clipee": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "test": "vitest --run",
+    "test:watch": "vitest",
+    "lint": "eslint src",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "prepare": "husky"
+  },
+  "keywords": [
+    "cli",
+    "markdown",
+    "web",
+    "clipper",
+    "readability",
+    "article",
+    "scraper"
+  ],
+  "author": "Sebastian Software GmbH",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sebastian-software/clipee.git"
+  },
+  "homepage": "https://github.com/sebastian-software/clipee",
+  "bugs": {
+    "url": "https://github.com/sebastian-software/clipee/issues"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/sebastian-software"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@10.2.0",
+  "dependencies": {
+    "@mozilla/readability": "^0.6.0",
+    "commander": "^14.0.2",
+    "jsdom": "^27.4.0",
+    "playwright": "^1.50.0",
+    "turndown": "^7.2.0",
+    "turndown-plugin-gfm": "^1.0.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "@types/jsdom": "^27.0.0",
+    "@types/node": "^22.10.0",
+    "@types/turndown": "^5.0.5",
+    "eslint": "^9.18.0",
+    "globals": "^17.1.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.4.2",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.20.0",
+    "vitest": "^4.0.18"
+  },
+  "lint-staged": {
+    "*.{ts,js,json,md,yml,yaml}": "prettier --write"
+  }
+}
