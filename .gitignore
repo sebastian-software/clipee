@@ -1,43 +1,42 @@
-lib-cov
-*.seed
-*.log
-*.csv
-*.dat
-*.out
-*.pid
-*.gz
-*.swp
-
-pids
-logs
-results
-tmp
-
-# Build
-public/css/main.css
-
-# Coverage reports
-coverage
-
-# API keys and secrets
-.env
-
-# Dependency directory
+# Dependencies
 node_modules
-bower_components
-storage/
-# Editors
-.idea
-*.iml
 
-# OS metadata
+# Build outputs
+dist
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
 .DS_Store
 Thumbs.db
 
-# Ignore built ts files
-dist/**/*
+# Test
+coverage
 
-# ignore lock files (we use pnpm)
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Cache
+.cache
+
+# Crawlee storage (legacy)
+storage
+
+# Output files
+dataset.jsonl
+output.md
+
+# Lock files (we use pnpm)
 yarn.lock
 package-lock.json
-dataset.jsonl

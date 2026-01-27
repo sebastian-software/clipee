@@ -4,7 +4,6 @@ Clipper is a Node.js command line tool that allows you to easily clip content fr
 
 Clipper provides a quick and simple way to save bits of content from the web for personal archival or note taking purposes, similar to browser extensions like Evernote Web Clipper or Notion Web Clipper. However, Clipper runs entirely in the terminal so you don't need to install any extensions or sign up for accounts.
 
-
 | HTML                                   | Markdown                                       |
 | -------------------------------------- | ---------------------------------------------- |
 | ![Screenshot of HTMl](assets/html.png) | ![Screenshot of Markdown](assets/markdown.png) |
@@ -28,7 +27,6 @@ _note: for crawling you need `playwright` and the browser dependencies._
 - `-f, --format <format>` - Output format (markdown, json) (default: markdown)
 - `-o, --output <file>` - Output file for clipped content (default: output.md)
 
-
 **Examples:**
 
 1. Clip content from a URL:
@@ -49,7 +47,7 @@ clipper clip -i <file>
 clipper clip -i <directory> -f json -o dataset.jsonl
 ```
 
-### Crawl 
+### Crawl
 
 > [!WARNING]  
 > Only use this command if you know what you're doing. Crawling websites can be resource intensive and may cause issues for the website owner. Use at your own risk.
@@ -70,7 +68,7 @@ clipper crawl -u <url>
 
 Results will be saved in `dataset.jsonl` file in the current directory.
 
-## Alternative use cases 
+## Alternative use cases
 
 ### Convert PDF to Markdown
 
@@ -80,7 +78,6 @@ If you want to convert a PDF to Markdown you can use [poppler](https://wiki.ubun
 pdftohtml -c -s -noframes test.pdf test.html
 clipper clip -i test.html
 ```
-
 
 ## Local Development
 
@@ -93,24 +90,24 @@ clipper clip -i test.html
 - Run `npm install -g .` to symlink the CLI for local testing
 - Run `clipper clip -u https://huggingface.co/docs/transformers/index` to build for development
 - Remove the symlink with `npm r clipper -g`
+
 ## Credits
 
 Clipper uses the following open source libraries:
 
 - [Mozilla Readability](https://github.com/mozilla/readability) - For parsing article content
-- [Turndown](https://github.com/mixmark-io/turndown) - For converting HTML to Markdown  
+- [Turndown](https://github.com/mixmark-io/turndown) - For converting HTML to Markdown
 - [Crawlee](https://crawlee.dev/) - For crawling websites
 
 ## License
 
-* Apache 2.0
-
+- Apache 2.0
 
 ## Release to npm
 
 1. Remove old build files with `rm -rf dist`
 1. Update the version in `package.json` if minor or major version
-2. Run `npm run build`
-3. Run `npm publish --access public`
-4. Create a new release on GitHub
-5. Update the version in `package.json` to the next patch version
+1. Run `npm run build`
+1. Run `npm publish --access public`
+1. Create a new release on GitHub
+1. Update the version in `package.json` to the next patch version

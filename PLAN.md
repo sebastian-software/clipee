@@ -83,12 +83,14 @@ Clipee ist ein Node.js CLI-Tool zum Extrahieren von Web-Inhalten und Konvertiere
 ```
 
 ### 1.2 Dateien entfernen
+
 - [ ] `package-lock.json` löschen
 - [ ] `src/index.d.ts` löschen (wird von tsup generiert)
 
 ### 1.3 Neue Konfigurationsdateien erstellen
 
 **tsconfig.json** (wie ardo, ohne React):
+
 ```json
 {
   "compilerOptions": {
@@ -114,13 +116,14 @@ Clipee ist ein Node.js CLI-Tool zum Extrahieren von Web-Inhalten und Konvertiere
 ```
 
 **tsup.config.ts** (wie create-ardo für CLI):
+
 ```typescript
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
   entry: {
-    index: 'src/index.ts',  // Library exports
-    cli: 'src/cli.ts',      // CLI entry point
+    index: 'src/index.ts', // Library exports
+    cli: 'src/cli.ts', // CLI entry point
   },
   format: ['esm'],
   target: 'node22',
@@ -135,6 +138,7 @@ export default defineConfig({
 ```
 
 **eslint.config.js** (wie ardo, ohne React):
+
 ```javascript
 import eslint from '@eslint/js'
 import tseslint from 'typescript-eslint'
@@ -165,6 +169,7 @@ export default tseslint.config(
 ```
 
 **vitest.config.ts** (wie ardo):
+
 ```typescript
 import { defineConfig } from 'vitest/config'
 
@@ -182,6 +187,7 @@ export default defineConfig({
 ```
 
 **.prettierrc** (identisch zu ardo):
+
 ```json
 {
   "semi": false,
@@ -193,6 +199,7 @@ export default defineConfig({
 ```
 
 **.prettierignore** (angepasst):
+
 ```
 node_modules/
 dist/
@@ -201,6 +208,7 @@ CHANGELOG.md
 ```
 
 **.gitignore** (wie ardo, angepasst):
+
 ```
 # Dependencies
 node_modules
@@ -243,12 +251,14 @@ storage
 ## Phase 2: Husky & Git Hooks
 
 ### 2.1 Husky einrichten
+
 ```bash
 pnpm add -D husky lint-staged
 pnpm exec husky init
 ```
 
 **.husky/pre-commit:**
+
 ```
 pnpm lint-staged
 ```
@@ -260,6 +270,7 @@ pnpm lint-staged
 ### 3.1 CI Workflow
 
 **.github/workflows/ci.yml:**
+
 ```yaml
 name: CI
 
@@ -313,6 +324,7 @@ jobs:
 ### 3.2 Release Please
 
 **.github/workflows/release-please.yml:**
+
 ```yaml
 name: Release Please
 
@@ -337,6 +349,7 @@ jobs:
 ```
 
 **release-please-config.json:**
+
 ```json
 {
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
@@ -361,6 +374,7 @@ jobs:
 ```
 
 **.release-please-manifest.json:**
+
 ```json
 {
   ".": "0.1.0"
@@ -370,6 +384,7 @@ jobs:
 ### 3.3 Publish Workflow
 
 **.github/workflows/publish.yml:**
+
 ```yaml
 name: Publish
 
@@ -421,6 +436,7 @@ jobs:
 ### 4.1 Dateistruktur ändern
 
 **Aktuell:**
+
 ```
 src/
 ├── index.ts      # CLI + Exports gemischt
@@ -431,6 +447,7 @@ src/
 ```
 
 **Neu:**
+
 ```
 src/
 ├── cli.ts        # CLI Entry Point (commander)
@@ -446,6 +463,7 @@ src/
 ### 4.2 ESM-Migration
 
 Änderungen in allen Dateien:
+
 - `import * as fs from 'fs'` → `import { readFileSync, writeFileSync } from 'node:fs'`
 - `import * as path from 'path'` → `import { join, dirname } from 'node:path'`
 - Relative Imports mit `.js` Extension: `import { foo } from './utils.js'`
@@ -453,16 +471,19 @@ src/
 ### 4.3 Code-Fixes
 
 **cli.ts (aus index.ts extrahiert):**
+
 - Version aus package.json lesen statt hardcoded
 - Beschreibung aktualisieren
 - Bessere Fehlerbehandlung
 
 **clipper.ts:**
+
 - `@ts-ignore` durch proper Types ersetzen
 - `any` Types eliminieren
 - Konstanten für Magic Numbers
 
 **crawler.ts (komplett neu mit Playwright + minimatch):**
+
 ```typescript
 import { chromium } from 'playwright'
 import { minimatch } from 'minimatch'
@@ -548,6 +569,7 @@ export async function crawl(
 ```
 
 **utils.ts:**
+
 - Type-Inkonsistenzen beheben
 - Async File I/O (optional)
 
@@ -587,6 +609,7 @@ export async function crawl(
 ```
 
 ### 5.2 Entfernen
+
 - `crawlee` (~50MB, ersetzt durch reines Playwright + minimatch)
 - `linkedom` (ungenutzt)
 - `ts-node` (ersetzt durch tsup watch)
@@ -598,8 +621,9 @@ export async function crawl(
 
 ### 6.1 Unit Tests
 
-**src/__tests__/clipper.test.ts:**
-```typescript
+**src/**tests**/clipper.test.ts:**
+
+````typescript
 import { describe, it, expect } from 'vitest'
 import { extract_from_html } from '../clipper.js'
 
@@ -612,14 +636,16 @@ describe('clipper', () => {
   })
 
   it('should handle code blocks', async () => {
-    const html = '<html><body><article><pre class="language-js">const x = 1</pre></article></body></html>'
+    const html =
+      '<html><body><article><pre class="language-js">const x = 1</pre></article></body></html>'
     const result = await extract_from_html(html)
     expect(result).toContain('```js')
   })
 })
-```
+````
 
-**src/__tests__/utils.test.ts:**
+**src/**tests**/utils.test.ts:**
+
 ```typescript
 import { describe, it, expect, vi } from 'vitest'
 import { writeMarkdownToJsonlines } from '../utils.js'
@@ -666,9 +692,9 @@ describe('utils', () => {
 
 ## Entscheidungen
 
-| Frage | Entscheidung |
-|-------|--------------|
-| Paketname | `clipee` |
-| Repository | `sebastian-software/clipee` |
-| Node.js | `>=22.0.0` |
-| crawlee | Entfernt, ersetzt durch Playwright + minimatch |
+| Frage      | Entscheidung                                   |
+| ---------- | ---------------------------------------------- |
+| Paketname  | `clipee`                                       |
+| Repository | `sebastian-software/clipee`                    |
+| Node.js    | `>=22.0.0`                                     |
+| crawlee    | Entfernt, ersetzt durch Playwright + minimatch |
