@@ -1,6 +1,6 @@
 {
   "name": "clipee",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "CLI tool to clip web content and convert to markdown",
   "type": "module",
   "main": "./dist/index.js",
