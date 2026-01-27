@@ -88,6 +88,24 @@ describe('htmlToMarkdown', () => {
     expect(result.markdown).toContain('package main')
   })
 
+  it('should detect language from parent outerHTML data attribute', () => {
+    // Tests the fallback to outerHTML matching when className doesn't have the language
+    const html = `
+      <html>
+        <head><title>Code Example</title></head>
+        <body>
+          <article>
+            <h1>Code Example</h1>
+            <div data-lang-swift="true"><pre>let x = 1</pre></div>
+          </article>
+        </body>
+      </html>
+    `
+    const result = htmlToMarkdown(html, 'https://example.com')
+    expect(result.markdown).toContain('```swift')
+    expect(result.markdown).toContain('let x = 1')
+  })
+
   it('should handle code blocks without language', () => {
     const html = `
       <html>
@@ -183,21 +201,41 @@ describe('htmlToMarkdown', () => {
     expect(result.title).toBe('My Title')
   })
 
-  it('should convert h2 to h1 when it matches title', () => {
+  it('should convert h2 to h1 when it contains the title', () => {
+    // Note: Readability removes h2 if it exactly matches title,
+    // so we test with h2 that contains the title but isn't identical
     const html = `
       <html>
-        <head><title>Article Title</title></head>
+        <head><title>Guide</title></head>
         <body>
           <article>
-            <h2>Article Title</h2>
+            <h2>The Complete Guide</h2>
+            <p>Content here with enough text to pass the threshold.</p>
+          </article>
+        </body>
+      </html>
+    `
+    const result = htmlToMarkdown(html, 'https://example.com')
+    expect(result.markdown).toContain('# The Complete Guide')
+    expect(result.markdown).not.toContain('## The Complete Guide')
+    expect(result.title).toBe('Guide')
+  })
+
+  it('should prepend h1 when h2 does not match title', () => {
+    const html = `
+      <html>
+        <head><title>Page Title</title></head>
+        <body>
+          <article>
+            <h2>Different Section</h2>
             <p>Content here.</p>
           </article>
         </body>
       </html>
     `
     const result = htmlToMarkdown(html, 'https://example.com')
-    expect(result.markdown).toContain('# Article Title')
-    expect(result.markdown).not.toContain('## Article Title')
+    expect(result.markdown).toContain('# Page Title')
+    expect(result.markdown).toContain('## Different Section')
   })
 
   it('should remove empty anchor links', () => {

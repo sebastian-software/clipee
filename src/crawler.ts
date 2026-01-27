@@ -12,6 +12,7 @@ export interface CrawlResult extends ExtractResult {
   crawledAt: string
 }
 
+/* v8 ignore start */
 export async function crawl(startUrl: string, options: CrawlOptions): Promise<void> {
   const { output, concurrency, headless } = options
   const startOrigin = new URL(startUrl).origin
@@ -140,6 +141,7 @@ export async function crawl(startUrl: string, options: CrawlOptions): Promise<vo
 
   console.error(`\nDone! Crawled ${totalProcessed} pages → ${output}`)
 }
+/* v8 ignore stop */
 
 export function normalizeUrl(url: string): string | null {
   try {

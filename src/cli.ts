@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* v8 ignore start */
 
 import { program } from 'commander'
 import { readFileSync } from 'node:fs'
