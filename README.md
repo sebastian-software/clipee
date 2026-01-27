@@ -17,158 +17,120 @@
 
 ## What is Clipee?
 
-Clipee is a CLI tool that extracts readable content from web pages and converts it to clean Markdown. Think of it as a terminal-based alternative to browser extensions like Evernote Web Clipper or Notion Web Clipper — no accounts, no extensions, just fast and scriptable content extraction.
+Clipee extracts readable content from web pages and converts it to clean Markdown. It uses a real browser (Playwright) to handle JavaScript-rendered content, and can crawl entire sites with parallel processing.
 
 **Key Features:**
 
-- **Smart Extraction** — Uses Mozilla's Readability to find the main content
-- **Clean Markdown** — GitHub-flavored Markdown with proper code blocks
-- **Batch Processing** — Process entire directories of HTML files
-- **Web Crawling** — Crawl and extract entire sites with glob patterns
-- **Scriptable** — Perfect for automation and data pipelines
-
-| HTML                                   | Markdown                                       |
-| -------------------------------------- | ---------------------------------------------- |
-| ![Screenshot of HTML](assets/html.png) | ![Screenshot of Markdown](assets/markdown.png) |
+- **Real Browser** — Uses Playwright to handle SPAs and dynamic content
+- **Smart Extraction** — Mozilla Readability finds the main content
+- **Parallel Crawling** — Multiple browser tabs for fast site-wide extraction
+- **Same-Domain Crawling** — Automatically stays on the same domain
+- **Simple CLI** — Just `clipee <url>`
 
 ## Installation
 
 ```bash
-# Install globally
 pnpm add -g clipee
 
-# Or use directly with npx
-npx clipee clip -u https://example.com
-```
-
-For crawling, you also need to install Playwright browsers:
-
-```bash
+# Install browser (first time only)
 npx playwright install chromium
 ```
 
 ## Usage
 
-### Clip a URL
+### Clip a single page
 
 ```bash
-clipee clip -u https://example.com/article
-```
+# Output to stdout
+clipee https://example.com/article
 
-### Clip a local HTML file
-
-```bash
-clipee clip -i article.html
-```
-
-### Batch convert a directory
-
-```bash
-clipee clip -i ./html-files -f json -o dataset.jsonl
+# Save to file
+clipee https://example.com/article -o article.md
 ```
 
 ### Crawl an entire site
 
-> [!WARNING]
-> Crawling can be resource intensive. Use responsibly and respect robots.txt.
-
 ```bash
-clipee crawl -u https://docs.example.com -g "https://docs.example.com/**/*"
+# Crawl all pages on the same domain
+clipee https://docs.example.com --crawl
+
+# With more parallel tabs
+clipee https://docs.example.com --crawl -n 5
+
+# Custom output file
+clipee https://docs.example.com --crawl -o docs.jsonl
 ```
 
 ## CLI Reference
 
-### `clipee clip`
+```
+clipee <url> [options]
 
-Extract content from URLs or HTML files.
+Arguments:
+  url                     URL to clip
 
-| Option                | Description                   | Default     |
-| --------------------- | ----------------------------- | ----------- |
-| `-u, --url <url>`     | URL to clip                   | —           |
-| `-i, --input <path>`  | HTML file or directory        | —           |
-| `-o, --output <file>` | Output file path              | `output.md` |
-| `-f, --format <fmt>`  | Output format: `md` or `json` | `md`        |
+Options:
+  -o, --output <file>     Output file (default: stdout for single, output.jsonl for crawl)
+  -c, --crawl             Crawl mode: follow all links on same domain
+  -n, --concurrency <n>   Number of parallel browser tabs (default: 3)
+  --no-headless           Show browser window (useful for debugging)
+  -V, --version           Show version
+  -h, --help              Show help
+```
 
-### `clipee crawl`
+## Output Formats
 
-Crawl a website and extract all pages.
+**Single page** → Markdown to stdout (or file with `-o`)
 
-| Option                   | Description                     | Default         |
-| ------------------------ | ------------------------------- | --------------- |
-| `-u, --url <url>`        | Starting URL                    | —               |
-| `-g, --globs <patterns>` | Glob patterns (comma-separated) | —               |
-| `-o, --output <file>`    | Output JSONL file               | `dataset.jsonl` |
+**Crawl mode** → JSONL file with one entry per page:
+
+```json
+{
+  "title": "Page Title",
+  "markdown": "# Content...",
+  "url": "https://...",
+  "crawledAt": "2024-01-15T..."
+}
+```
 
 ## Programmatic API
 
-Clipee can also be used as a library:
-
 ```typescript
-import { extract_from_url, extract_from_html, crawl } from 'clipee'
+import { extract, crawl } from 'clipee'
 
-// Extract from URL
-const markdown = await extract_from_url('https://example.com')
+// Single page
+const markdown = await extract('https://example.com/article')
 
-// Extract from HTML string
-const md = await extract_from_html('<html>...</html>')
+// With metadata
+import { extractWithMetadata } from 'clipee'
+const { title, markdown, url } = await extractWithMetadata('https://example.com')
 
-// Crawl a site
-await crawl('https://docs.example.com', 'output.jsonl', ['https://docs.example.com/**/*'])
-```
-
-## Use Cases
-
-### Convert PDF to Markdown
-
-Use [poppler](https://poppler.freedesktop.org/) to convert PDF to HTML first:
-
-```bash
-pdftohtml -c -s -noframes document.pdf document.html
-clipee clip -i document.html -o document.md
-```
-
-### Build a documentation dataset
-
-```bash
-clipee crawl -u https://docs.example.com \
-  -g "https://docs.example.com/guide/**/*,https://docs.example.com/api/**/*" \
-  -o docs-dataset.jsonl
-```
-
-### Archive blog posts
-
-```bash
-for url in $(cat urls.txt); do
-  clipee clip -u "$url" -o "archive/$(basename $url).md"
-done
+// Crawl
+await crawl('https://docs.example.com', {
+  output: 'docs.jsonl',
+  concurrency: 5,
+  headless: true,
+})
 ```
 
 ## Development
 
 ```bash
-# Clone the repository
 git clone https://github.com/sebastian-software/clipee.git
 cd clipee
-
-# Install dependencies
 pnpm install
-
-# Build
 pnpm build
-
-# Run tests
 pnpm test
 
-# Development mode (watch)
-pnpm dev
+# Test locally
+node dist/cli.js https://example.com
 ```
 
 ## Built With
 
+- [Playwright](https://playwright.dev/) — Browser automation
 - [Mozilla Readability](https://github.com/mozilla/readability) — Content extraction
-- [Turndown](https://github.com/mixmark-io/turndown) — HTML to Markdown conversion
-- [Playwright](https://playwright.dev/) — Web crawling
-- [Commander](https://github.com/tj/commander.js) — CLI framework
+- [Turndown](https://github.com/mixmark-io/turndown) — HTML to Markdown
 
 ## License
 
