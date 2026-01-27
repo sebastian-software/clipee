@@ -5,6 +5,7 @@
 **Web Content → Markdown, right from your terminal**
 
 [![CI](https://github.com/sebastian-software/clipee/actions/workflows/ci.yml/badge.svg)](https://github.com/sebastian-software/clipee/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/sebastian-software/clipee/graph/badge.svg)](https://codecov.io/gh/sebastian-software/clipee)
 [![npm](https://img.shields.io/npm/v/clipee.svg)](https://www.npmjs.com/package/clipee)
 [![npm downloads](https://img.shields.io/npm/dm/clipee.svg)](https://www.npmjs.com/package/clipee)
 [![License](https://img.shields.io/npm/l/clipee.svg)](https://github.com/sebastian-software/clipee/blob/main/LICENSE)

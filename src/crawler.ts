@@ -141,7 +141,7 @@ export async function crawl(startUrl: string, options: CrawlOptions): Promise<vo
   console.error(`\nDone! Crawled ${totalProcessed} pages → ${output}`)
 }
 
-function normalizeUrl(url: string): string | null {
+export function normalizeUrl(url: string): string | null {
   try {
     const u = new URL(url)
     // Remove hash and trailing slash
@@ -157,7 +157,7 @@ function normalizeUrl(url: string): string | null {
   }
 }
 
-function isSameOrigin(url: string, origin: string): boolean {
+export function isSameOrigin(url: string, origin: string): boolean {
   try {
     return new URL(url).origin === origin
   } catch {
