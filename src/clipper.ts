@@ -57,24 +57,25 @@ function extract_from_dom(dom: JSDOM): string {
     charThreshold: READABILITY_CHAR_THRESHOLD,
   }).parse()
 
-  if (!article) {
+  if (!article?.content) {
     throw new Error('Failed to parse article')
   }
 
   // Remove HTML comments
   let content = article.content.replace(/<!--.*?-->/gs, '')
+  const title = article.title ?? ''
 
   // Try to add proper h1 if title exists
-  if (article.title.length > 0) {
+  if (title.length > 0) {
     const h2Regex = /<h2[^>]*>(.*?)<\/h2>/
     const match = content.match(h2Regex)
 
-    if (match?.[0].includes(article.title)) {
+    if (match?.[0].includes(title)) {
       // Replace first h2 with h1
       content = content.replace('<h2', '<h1').replace('</h2', '</h1')
     } else {
       // Add title as h1
-      content = `<h1>${article.title}</h1>\n${content}`
+      content = `<h1>${title}</h1>\n${content}`
     }
   }
 
